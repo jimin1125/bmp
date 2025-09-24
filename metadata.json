@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Beetle Manager Pro",
+  "description": "An application for managing stag beetles and rhinoceros beetles with a hierarchical classification system (Genus, Species, Subspecies) and detailed individual records. It features a table-based input system and data preprocessing for administrative analysis.",
+  "requestFramePermissions": []
+}
