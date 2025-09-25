@@ -12,15 +12,19 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// 라우트 예제
-app.get("/", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    res.send(`Hello from Express! Time: ${result.rows[0].now}`);
-  } catch (err) {
-    res.send("Hello from Express! (DB 연결 안 됨)");
-  }
+// 값 저장
+app.post("/save", express.json(), async (req, res) => {
+  const { content } = req.body;
+  await pool.query("INSERT INTO messages (content) VALUES ($1)", [content]);
+  res.send("Saved!");
 });
+
+// 값 불러오기
+app.get("/messages", async (req, res) => {
+  const result = await pool.query("SELECT * FROM messages ORDER BY id DESC");
+  res.json(result.rows);
+});
+
 
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
