@@ -1,30 +1,41 @@
 // index.js
 const express = require("express");
-const { Pool } = require("pg"); // DB 안 쓸 거면 이 줄 지워도 됨
+const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
+const { Pool } = require("pg");
+const cookieParser = require("cookie-parser");
+
+// DB 연결 풀
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// DB 쓰는 경우
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  // Railway Postgres는 SSL 필요할 수 있음
-  ssl: { rejectUnauthorized: false }
-});
+// 미들웨어
+app.use(express.json());
+app.use(cookieParser());
 
-// 값 저장
-app.post("/save", express.json(), async (req, res) => {
-  const { content } = req.body;
-  await pool.query("INSERT INTO messages (content) VALUES ($1)", [content]);
-  res.send("Saved!");
-});
+// 세션 설정
+app.use(session({
+  store: new pgSession({
+    pool: pool,        // Postgres에 세션 저장
+    tableName: "session" // 세션 테이블 이름 (자동 생성됨)
+  }),
+  secret: "super-secret-key", // ⚠️ 실제로는 환경변수로 관리
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,   // HTTPS에서만 쿠키 전송하려면 true
+    maxAge: 1000 * 60 * 60 * 24 // 1일 유지
+  }
+}));
 
-// 값 불러오기
-app.get("/messages", async (req, res) => {
-  const result = await pool.query("SELECT * FROM messages ORDER BY id DESC");
-  res.json(result.rows);
-});
-
+// 라우트 등록
+const authRoutes = require("./routes/auth");
+app.use("/auth", authRoutes);
 
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
