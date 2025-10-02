@@ -34,7 +34,7 @@ app.use(session({
 }));
 
 // ✅ 라우트 등록
-const authRoutes = require("./node_modules/routes/auth");
+const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
 
 // ✅ 정적 파일은 dist 폴더에서 제공
