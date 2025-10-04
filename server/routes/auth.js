@@ -1,6 +1,6 @@
 // routes/auth.js
 const express = require("express");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { Pool } = require("pg");
 
 const router = express.Router();

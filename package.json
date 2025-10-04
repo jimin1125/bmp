@@ -10,13 +10,15 @@
     "start": "node server/index.js"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "express": "^4.19.2",
-    "express-session":"^1.17.3",
-    "cookie-parser": "1.4.7",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "connect-pg-simple": "10.0.0",
-    "pg": "^8.11.1"
+    "cookie-parser": "1.4.7",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "pg": "^8.11.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
